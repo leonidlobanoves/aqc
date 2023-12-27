@@ -142,7 +142,6 @@ class WebTablePage(BasePage):
             data.append(self.check_count_rows())
         return data
 
-
     def check_count_rows(self):
         list_rows = self.elements_are_present(self.locators.PEOPLE_LIST)
         return len(list_rows)
