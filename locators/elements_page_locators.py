@@ -59,3 +59,6 @@ class ButtonsPageLocators:
     OUTPUT_RIGHT_BUTTON = (By.CSS_SELECTOR, "p[id='rightClickMessage']")
     OUTPUT_SINGLE_CLICK_BUTTON = (By.CSS_SELECTOR, "p[id='dynamicClickMessage']")
 
+class LinkPageLocators:
+    SIMPLE_LINK = (By.CSS_SELECTOR, "a[id='simpleLink']")
+    BAD_LINK = (By.CSS_SELECTOR, "a[id='bad-request']")

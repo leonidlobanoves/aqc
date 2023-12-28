@@ -1,13 +1,12 @@
 import random
-import time
 
-from selenium.webdriver.common.by import By
+import requests
 
 from generator.generator import generated_person
 from locators.elements_page_locators import TextBoxPageLocators, CheckBoxPageLocators, RadioButtonPageLocators, \
-    WebTablePageLocators, ButtonsPageLocators
+    WebTablePageLocators, ButtonsPageLocators, LinkPageLocators
 from pages.base_page import BasePage
-
+from selenium.webdriver.support.ui import Select
 
 class TextBoxPage(BasePage):
     locators = TextBoxPageLocators()
@@ -138,7 +137,8 @@ class WebTablePage(BasePage):
             count_row_button = self.element_is_present(self.locators.COUNT_ROW_LIST)
             self.go_to_element(count_row_button)
             count_row_button.click()
-            self.element_is_visible((By.CSS_SELECTOR, f'option[value="{x}"]')).click()
+            Select(count_row_button).select_by_value(str(x))
+            # self.element_is_visible((By.CSS_SELECTOR, f'option[value="{x}"]')).click()
             data.append(self.check_count_rows())
         return data
 
@@ -150,7 +150,7 @@ class ButtonsPage(BasePage):
     locators = ButtonsPageLocators()
 
     def click_on_different_buttons(self, type_click):
-        if type_click == "double":
+        if type_click == 'double':
             self.action_double_click(self.element_is_visible(self.locators.DOUBLE_BUTTON))
             return self.check_button_result(self.locators.OUTPUT_DOUBLE_BUTTON)
         if type_click == "right":
@@ -163,4 +163,28 @@ class ButtonsPage(BasePage):
 
     def check_button_result(self, element):
         return self.element_is_present(element).text
+
+
+class LinkPage(BasePage):
+    locators = LinkPageLocators()
+
+    def check_new_tab_single_link(self):
+        simple_link = self.element_is_visible(self.locators.SIMPLE_LINK)
+        link_href = simple_link.get_attribute('href')
+        request = requests.get(link_href)
+        if request.status_code == 200:
+            simple_link.click()
+            self.driver.switch_to.window(self.driver.window_handles[1])
+            url = self.driver.current_url
+            return link_href, url
+        else:
+            return link_href, request.status_code
+
+    def check_broken_link(self, url):
+        request = requests.get(url)
+        if request.status_code == 200:
+            self.element_is_present(self.locators.BAD_LINK).click()
+        else:
+            return request.status_code
+
 
