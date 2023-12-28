@@ -105,5 +105,6 @@ class TestElements:
             response = links_page.check_broken_link('https://demoqa.com/bad-request')
             assert response == 400, "the link works or the status code in son 400"
 
+    class Test
 
 
