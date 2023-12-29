@@ -62,3 +62,9 @@ class ButtonsPageLocators:
 class LinkPageLocators:
     SIMPLE_LINK = (By.CSS_SELECTOR, "a[id='simpleLink']")
     BAD_LINK = (By.CSS_SELECTOR, "a[id='bad-request']")
+
+class UploadAndDownloadPageLocators:
+    UPLOAD_FILE = (By.CSS_SELECTOR, 'input[id="uploadFile"]')
+    RESULT_UPLOAD_FILE = (By.CSS_SELECTOR, 'p[id="uploadedFilePath"]')
+
+    DOWNLOAD_FILE = (By.CSS_SELECTOR, 'a[id="downloadButton"]')

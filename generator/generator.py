@@ -17,6 +17,11 @@ def generated_person():
         email= faker_ru.email(),
         current_address= faker_ru.address(),
         permanent_address= faker_ru.address()
-
-
     )
+
+def generated_file():
+    path = f'/Users/leonidlobanov/PycharmProjects/aqc/filetest{random.randint(1,19)}.txt'
+    file = open(path, 'w+')
+    file.write(f'Hi man, Success - {random.randint(1,19)}')
+    file.close()
+    return file.name, path
