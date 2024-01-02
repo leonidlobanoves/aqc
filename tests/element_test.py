@@ -136,3 +136,4 @@ class TestElements:
             dynamic_properties_page.open()
             enable = dynamic_properties_page.check_enable_button()
             assert enable is True, 'button did not enable after 5 second'
+
