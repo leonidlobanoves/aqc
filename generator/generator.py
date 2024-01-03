@@ -16,7 +16,8 @@ def generated_person():
         department= faker_ru.job(),
         email= faker_ru.email(),
         current_address= faker_ru.address(),
-        permanent_address= faker_ru.address()
+        permanent_address= faker_ru.address(),
+        mobile= faker_ru.msisdn(),
     )
 
 def generated_file():
@@ -25,3 +26,29 @@ def generated_file():
     file.write(f'Hi man, Success - {random.randint(1,19)}')
     file.close()
     return file.name, path
+
+def generated_subject():
+    subjects = ["Hindi", "English", "Maths", "Physics", "Chemistry", "Biology", "Computer Science", "Commerce", "Accounting", "Economics", "Arts", "Social Studies", "History", "Civics"]
+    return random.choice(subjects)
+
+def generated_choose_state():
+    states = ["NCR", "Uttar Pradesh", "Haryana", "Rajasthan"]
+    return random.choice(states)
+
+def generated_choose_city():
+    city = generated_choose_state()
+    NCR = ["Delhi", "Gurgaon", "Noida"]
+    Uttar_Pradesh = ['Agra', "Lucknow", "Merrut"]
+    Haryana = ["Karnal", "Panipat"]
+    Rajasthan = ["Jaipur", "Jaiselmer"]
+    if city == 'NcR':
+        return random.choice(NCR)
+    elif city == "Uttar Pradesh":
+        return random.choice(Uttar_Pradesh)
+    elif city == "Haryana":
+        return random.choice(Haryana)
+    elif city == "Rajasthan":
+        return random.choice(Rajasthan)
+    else:
+        return False
+
