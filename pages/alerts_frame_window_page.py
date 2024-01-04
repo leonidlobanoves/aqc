@@ -3,7 +3,8 @@ import time
 
 from selenium.common import UnexpectedAlertPresentException
 
-from locators.alerts_frame_window_locators import BrowserWindowsPageLocators, AlertsPageLocators
+from locators.alerts_frame_window_locators import BrowserWindowsPageLocators, AlertsPageLocators, FramesPageLocators, \
+    NestedFramesPageLocators
 from pages.base_page import BasePage
 
 
@@ -56,4 +57,36 @@ class AlertsPage(BasePage):
         text_result = self.element_is_present(self.locators.PROMPT_RESULT).text
         return text, text_result
 
+class FramesPage(BasePage):
+    locators = FramesPageLocators()
+
+    def check_frame(self, frame_num):
+        if frame_num == 'frame1':
+            frame = self.element_is_present(self.locators.FIRST_FRAME)
+            width = frame.get_attribute('width')
+            height = frame.get_attribute('height')
+            self.driver.switch_to.frame(frame)
+            text = self.element_is_present(self.locators.TITLE_FRAME).text
+            self.driver.switch_to.default_content()
+            return [text, width, height]
+        if frame_num == 'frame2':
+            frame = self.element_is_present(self.locators.SECOND_FRAME)
+            width = frame.get_attribute('width')
+            height = frame.get_attribute('height')
+            self.driver.switch_to.frame(frame)
+            text = self.element_is_present(self.locators.TITLE_FRAME).text
+            self.driver.switch_to.default_content()
+            return [text, width, height]
+
+class NestedFramesPage(BasePage):
+    locators = NestedFramesPageLocators()
+
+    def check_nested_frames(self):
+        parent_frame = self.element_is_present(self.locators.PARENT_FRAME)
+        self.driver.switch_to.frame(parent_frame)
+        parent_text = self.element_is_present(self.locators.PARENT_TEXT).text
+        child_frame = self.element_is_present(self.locators.CHILD_FRAME)
+        self.driver.switch_to.frame(child_frame)
+        child_text = self.element_is_present(self.locators.CHILD_TEXT).text
+        return parent_text, child_text
 

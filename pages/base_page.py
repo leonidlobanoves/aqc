@@ -12,7 +12,7 @@ class BasePage:
         self.driver.execute_script("document.getElementById('fixedban').style.display = 'none'")
 
 
-    def element_is_visible(self, locator, timeout=5):
+    def element_is_visible(self, locator, timeout=1):
         return wait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
 
     def elements_are_visible(self, locator, timeout=5):
