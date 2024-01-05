@@ -39,6 +39,8 @@ class BasePage:
         action.double_click(element)
         action.perform()
 
+    def element_is_not_clickable(self, locator, timeout=5):
+        return wait(self.driver, timeout).until_not(EC.element_to_be_clickable(locator))
     def action_right_click(self, element):
         action = ActionChains(self.driver)
         action.context_click(element)
