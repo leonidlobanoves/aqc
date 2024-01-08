@@ -50,6 +50,11 @@ class BasePage:
         select = Select(self.element_is_present(element))
         select.select_by_visible_text(value)
 
+    def action_move_to_element(self, element):
+        action = ActionChains(self.driver)
+        action.move_to_element(element)
+        action.perform()
+
     def drag_and_drop_by_offset(self, element, coords_x, coords_y):
         action = ActionChains(self.driver)
         action.drag_and_drop_by_offset(element, coords_x, coords_y)
