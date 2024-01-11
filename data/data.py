@@ -24,3 +24,10 @@ class Date:
     month: str = None
     year: str = None
     time: str = None
+
+@dataclass
+class SelectMenu:
+    select_value: list = None
+    select_title: list = None
+    multiselect_color: list = None
+    car_select: list = None

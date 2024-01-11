@@ -1,6 +1,6 @@
 import random
 
-from data.data import Person, Color, Date
+from data.data import Person, Color, Date, SelectMenu
 from faker import Faker
 
 faker_ru = Faker('ru_RU')
@@ -55,7 +55,7 @@ def generated_choose_city():
 
 def generated_color():
     yield Color(
-        color_name=["Red", "Blue", "Green", "Yellow", "Purple", "Black", "White", "Voilet", "Indigo", "Magenta", "Aqua"]
+        color_name=["Blue", "Green", "Yellow", "Purple", "Black", "White", "Voilet", "Indigo", "Magenta", "Aqua"]
     )
 
 def generated_date():
@@ -65,3 +65,12 @@ def generated_date():
         day=faker_en.day_of_month(),
         time='12:00'
     )
+
+def generated_select_menu():
+    yield SelectMenu(
+        select_value=["Group 1, option 1", "Group 1, option 2", "Group 2, option 1", "Group 2, option 2", "A root option", "Another root option"],
+        select_title=["Dr.", "Mr.", "Mrs.", "Ms.", "Prof.", "Other"],
+        multiselect_color=["Green", "Blue", "Black", "Red"],
+        car_select=["Volvo", "Saab", "Opel", "Audi"]
+    )
+

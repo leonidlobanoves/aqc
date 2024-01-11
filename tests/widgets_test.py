@@ -1,7 +1,8 @@
 import time
 
+from generator.generator import generated_select_menu, generated_color
 from pages.widgets_page import AccordianPage, AutocompletePage, DatePickerPage, SliderPage, ProgressBarPage, TabsPage, \
-    ToolTipsPage, MenuPage
+    ToolTipsPage, MenuPage, SelectMenuPage
 
 
 class TestWidgets:
@@ -102,4 +103,13 @@ class TestWidgets:
         def test_menu(self, driver):
             select_menu_page = SelectMenuPage(driver, 'https://demoqa.com/select-menu')
             select_menu_page.open()
+            select_menu_page.fill_selected_menu()
+            time.sleep(1)
+            option, title,  old, multi, standard = select_menu_page.get_text_from_menu()
+            data = next(generated_select_menu())
+            assert option in data.select_value, "The value has not been changed, or was not filled"
+            assert title in data.select_title, "The title has not been changed, or was not filled"
+            assert old != 'Red', "The field has not been changed"
+            assert multi in data.multiselect_color, "The field has not been changed, or was not filled"
+            assert standard in data.car_select, "The field has not been changed, or was not filled"
 

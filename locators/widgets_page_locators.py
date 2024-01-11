@@ -68,4 +68,12 @@ class MenuPageLocators:
     MENU_ITEM_LIST = (By.CSS_SELECTOR, 'ul[id="nav"] li a')
 
 class SelectMenuPageLocators:
-    pass
+    SELECT_OPTION = (By.CSS_SELECTOR, 'input[id="react-select-2-input"]')
+    SELECT_TITLE = (By.CSS_SELECTOR, 'input[id="react-select-3-input"]')
+    SELECT_COLOR_OLD = (By.CSS_SELECTOR, 'select[id="oldSelectMenu"]')
+    MULTISELECT_DROPDOWN = (By.CSS_SELECTOR, 'input[id="react-select-4-input"]')
+    MULTISELECT_STANDARD = (By.CSS_SELECTOR, 'select[id="cars"]')
+
+    RESULT_FIRST = (By.CSS_SELECTOR, 'div[class=" css-1uccc91-singleValue"]')
+    MULTISELECT_RESULT = (By.CSS_SELECTOR, 'div[class="css-1rhbuit-multiValue"]')
+

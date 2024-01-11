@@ -3,10 +3,12 @@ import time
 
 from selenium.common import TimeoutException, ElementClickInterceptedException
 from selenium.webdriver import Keys
+from selenium.webdriver.support.select import Select
 
-from generator.generator import generated_color, generated_date
+from generator.generator import generated_color, generated_date, generated_select_menu
 from locators.widgets_page_locators import AccordianPageLocators, AutocompletePageLocators, DatePickerPageLocators, \
-    SliderPageLocators, ProgressBarPageLocators, TabsPageLocators, ToolTipsPageLocators, MenuPageLocators
+    SliderPageLocators, ProgressBarPageLocators, TabsPageLocators, ToolTipsPageLocators, MenuPageLocators, \
+    SelectMenuPageLocators
 from pages.base_page import BasePage
 
 
@@ -194,5 +196,25 @@ class MenuPage(BasePage):
 class SelectMenuPage(BasePage):
     locators = SelectMenuPageLocators()
 
+    def fill_selected_menu(self):
+        value = random.choice(next(generated_select_menu()).select_value)
+        title = random.choice(next(generated_select_menu()).select_title)
+        self.element_is_visible(self.locators.SELECT_OPTION).send_keys(value, Keys.ENTER)
+        self.element_is_visible(self.locators.SELECT_TITLE).send_keys(title, Keys.ENTER)
+        self.select_by_text(self.locators.SELECT_COLOR_OLD, random.choice(next(generated_color()).color_name))
+        color_dropdown = random.choice(next(generated_select_menu()).multiselect_color)
+        self.element_is_visible(self.locators.MULTISELECT_DROPDOWN).send_keys(color_dropdown, Keys.ENTER)
+        self.select_by_text(self.locators.MULTISELECT_STANDARD, random.choice(next(generated_select_menu()).car_select))
+
+
+    def get_text_from_menu(self):
+        res_check_list = self.elements_are_visible(self.locators.RESULT_FIRST)
+        data = []
+        for item in res_check_list:
+            data.append(item.text)
+        old_style_new_color = Select(self.element_is_visible(self.locators.SELECT_COLOR_OLD)).first_selected_option.text
+        multi_result = self.element_is_present(self.locators.MULTISELECT_RESULT).text
+        standard = Select(self.element_is_visible(self.locators.MULTISELECT_STANDARD)).first_selected_option.text
+        return *data, old_style_new_color, multi_result, standard
 
 
