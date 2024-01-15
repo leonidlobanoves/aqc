@@ -119,7 +119,7 @@ class SliderPage(BasePage):
     def check_slider(self):
         value_before = self.element_is_visible(self.locators.SLIDER_VALUE).get_attribute('value')
         slider_input = self.element_is_visible(self.locators.INPUT_SLIDER)
-        self.drag_and_drop_by_offset(slider_input, random.randint(1, 100), 0)
+        self.action_drag_and_drop_by_offset(slider_input, random.randint(1, 100), 0)
         value_after = self.element_is_visible(self.locators.SLIDER_VALUE).get_attribute('value')
         return value_before, value_after
 
@@ -216,5 +216,6 @@ class SelectMenuPage(BasePage):
         multi_result = self.element_is_present(self.locators.MULTISELECT_RESULT).text
         standard = Select(self.element_is_visible(self.locators.MULTISELECT_STANDARD)).first_selected_option.text
         return *data, old_style_new_color, multi_result, standard
+
 
 

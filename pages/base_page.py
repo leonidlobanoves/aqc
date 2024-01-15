@@ -14,6 +14,7 @@ class BasePage:
 
 
     def element_is_visible(self, locator, timeout=1):
+        self.go_to_element(self.element_is_present(locator))
         return wait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
 
     def elements_are_visible(self, locator, timeout=5):
@@ -55,8 +56,13 @@ class BasePage:
         action.move_to_element(element)
         action.perform()
 
-    def drag_and_drop_by_offset(self, element, coords_x, coords_y):
+    def action_drag_and_drop_by_offset(self, element, coords_x, coords_y):
         action = ActionChains(self.driver)
         action.drag_and_drop_by_offset(element, coords_x, coords_y)
+        action.perform()
+
+    def action_drag_and_drop_to_element(self, what, where):
+        action = ActionChains(self.driver)
+        action.drag_and_drop(what, where)
         action.perform()
 
