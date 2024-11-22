@@ -113,3 +113,62 @@ class TestWidgets:
             assert multi in data.multiselect_color, "The field has not been changed, or was not filled"
             assert standard in data.car_select, "The field has not been changed, or was not filled"
 
+        def check_response_order(context, key, order):
+            is_reversed = True if order = "DESC" else False
+
+            response_body = json.loads(context.response.text)
+            element_list = []
+
+            for element in response_body['content']:
+                if isinstance(element[key], str):
+                    element_list.append(element[key].upper())
+                else:
+                    element_list.append(element[key])
+            ordered_element_list = element_list.copy()
+            ordered_element_list.sort(reverse=is_reversed)
+            print(element_list)
+            print(ordered_element_list)
+
+            if element_list != ordered_element_list:
+                raise AssertionErrorror
+
+        def get_component_with_given_field(context, field, r_key, given_file, key):
+            response = json.loads(context.response.text)
+            list = response['content']
+            for item in list:
+                response_value = find_value_by_key_in_dictionary(item, r_key)
+                if response_value is not None:
+                    id = item[field]
+                    break
+
+            update_user_value(context, settings_type='profiles', value=str(id), filename=given_file, key=key)
+
+        def find_value_by_key_in_dictionary(data, target):
+            for key, value in data.items():
+                if key == target:
+                    return value
+                elif isinstance(value, dict):
+                    list_find = find_value_by_key_in_dictionary(value, target)
+                    if list_find is not None:
+                        return list_find
+                elif isinstance(value, list):
+                    for item in value:
+                        if isinstance(item, dict):
+                            list_find = find_value_by_key_in_dictionary(item, target)
+                            if list_find is not None:
+                                return list_find
+            return None
+
+
+def get_component_with_given_field(context, key_path, given_file, key):
+    response = json.loads(context.response.text)
+    items_list = response['content']
+
+    for item in items_list:
+        response_value = find_value_by_key_in_dictionary(item, key_path)
+        if response_value is not None:
+            # Получаем значение по пути к ключу key_path
+            value = response_value
+            break
+
+    update_user_value(context, settings_type='profiles', value=str(value), filename=given_file, key=key)

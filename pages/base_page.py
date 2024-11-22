@@ -2,6 +2,9 @@ from selenium.webdriver import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
+from seleniumbase import BaseCase
+
+
 class BasePage:
     def __init__(self, driver, url):
         self.driver = driver
@@ -9,8 +12,8 @@ class BasePage:
 
     def open(self):
         self.driver.get(self.url)
-        self.driver.execute_script("document.getElementsByTagName('footer')[0].remove();")
-        self.driver.execute_script("document.getElementById('fixedban').style.display = 'none'")
+        #self.driver.execute_script("document.getElementsByTagName('footer')[0].remove();")
+        #self.driver.execute_script("document.getElementById('fixedban').style.display = 'none'")
 
 
     def element_is_visible(self, locator, timeout=1):
@@ -20,9 +23,11 @@ class BasePage:
     def elements_are_visible(self, locator, timeout=5):
         return wait(self.driver, timeout).until(EC.visibility_of_all_elements_located(locator))
 
-    def element_is_present(self, locator, timeout=5):
-        return wait(self.driver, timeout).until(EC.presence_of_element_located(locator))
-
+    def element_is_present(self, locator, timeout=2):
+        try:
+            return wait(self.driver, timeout).until(EC.presence_of_element_located(locator))
+        except:
+            return None
     def elements_are_present(self, locator, timeout=5):
         return wait(self.driver, timeout).until(EC.presence_of_all_elements_located(locator))
 
@@ -48,6 +53,7 @@ class BasePage:
         action.perform()
 
     def select_by_text(self, element, value):
+        #self.go_to_element(self.element_is_present(element))
         select = Select(self.element_is_present(element))
         select.select_by_visible_text(value)
 
@@ -66,3 +72,19 @@ class BasePage:
         action.drag_and_drop(what, where)
         action.perform()
 
+    def find_element(self, locator):
+        return self.driver.find_element
+
+
+class ShadowDOMHelper:
+    def __init__(self, base_case):
+        self.base = base_case# Сохраняем переданный драйвер
+
+    def wait_for_shadow_element(self, locator):
+        # Ждем, пока элемент с Shadow DOM загрузится
+        shadow_element = self.base.wait_for_element(self, locator) # Используем локатор
+        return shadow_element
+
+    def click_example_button(self, locator):
+        example_button = self.base.wait_for_element(locator)  # Используем локатор
+        self.base.click(example_button)  # Кликаем на кнопку
