@@ -19,6 +19,7 @@ class TestExtranjeria:
             script_page.unban_auto()
             #driver.close()
 
+
         # def test_vichitki(self, driver):
         #     vichitka_page = Vichitka(driver, 'https://staff.mamba.ru/proxy?file=%2Fmoderation%2Fnew_anketas.phtml')
         #     vichitka_page.open()
