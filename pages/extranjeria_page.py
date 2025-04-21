@@ -125,8 +125,12 @@ class Script(BasePage):
             main_reason = random.choice([True, False])
             if main_reason == True:
                 field = self.element_is_visible(self.locators.text_field)
-                field.send_keys('''В некоторых случаях отправка сообщений, содержащих: наименование социальных сетей, мессенджеров и т.п., а также любые контактные данные или просьбу их предоставить - может идентифицироваться как деловые или коммерческие предложения, что категорически запрещено в сервисе знакомств и ведёт к окончательной блокировке.
-Попробуйте придерживаться более нейтральных тем при общении с новыми собеседниками. Анкета разблокирована.''')
+                one_of_two = random.choice([True, False])
+                if one_of_two:
+                    field.send_keys('''В некоторых случаях отправка сообщений, содержащих: наименование социальных сетей, мессенджеров и т.п., а также любые контактные данные или просьбу их предоставить - может идентифицироваться как деловые или коммерческие предложения, что категорически запрещено в сервисе знакомств и ведёт к окончательной блокировке.
+    Попробуйте придерживаться более нейтральных тем при общении с новыми собеседниками. Анкета разблокирована.''')
+                else:
+                    field.send_keys('''Во избежание повторных блокировок, вам следует разнообразить переписку на сайте. Старайтесь не отправлять одинаковых сообщений - данные действия могут расцениваться как рассылка спама. Анкета доступна в системе знакомств.''')
             else:
                 reason = random.choice(female_reasons)
                 self.select_by_text(self.locators.reason, reason)
@@ -138,6 +142,38 @@ class Script(BasePage):
                 break
         print("the folder is empty")
 
+    def ban_machine(self):
+        fid_value = self.element_is_present(self.locators.fid_number).get_attribute("value")
+        users_count_auto_loc = self.locators.count_text_auto.format(key=fid_value)
+        users_count_auto = self.element_is_present((By.XPATH, users_count_auto_loc)).text
+        print(users_count_auto)
+        while users_count_auto != "Бан машина (0)":
+            self.element_is_clickable(self.locators.moderation).click()
+            time.sleep(2)
+            self.driver.switch_to.window(self.driver.window_handles[1])
+            if self.element_is_present(self.locators.image):
+                self.driver.close()
+                self.driver.switch_to.window(self.driver.window_handles[0])
+                field = self.element_is_visible(self.locators.text_field)
+                field.send_keys(
+                    '''Наша система заметила подозрительные действия в вашем аккаунте. Чтобы продолжить использование сервиса, подтвердите ваше фото.''')
+                time.sleep(0.5)
+                self.element_is_clickable(self.locators.accept).click()
+            else:
+                self.element_is_visible(self.locators.unbanned).click()
+                self.element_is_visible(self.locators.unbanned).click()
+                time.sleep(0.5)
+                self.driver.close()
+                self.driver.switch_to.window(self.driver.window_handles[0])
+                field = self.element_is_visible(self.locators.text_field)
+                field.send_keys('''Наша система заметила подозрительные действия в вашем аккаунте. Сейчас ваш аккаунт разблокирован. Для того, чтобы избежать блокировки в дальнейшем, разместите портретное фото и верифицируйте его в настройках вашего аккаунта.''')
+                time.sleep(0.5)
+                self.element_is_clickable(self.locators.accept).click()
+            time.sleep(0.5)
+            users_count_auto = self.element_is_present((By.XPATH, users_count_auto_loc)).text
+            if users_count_auto == "Бан машина (0)":
+                break
+        print("the folder is empty")
 
 
 class Vichitka(BasePage):
@@ -152,19 +188,22 @@ class Vichitka(BasePage):
         self.driver.switch_to.frame(frame)
         messages = self.elements_are_present(self.locators.all_messages)
         pattern = re.compile(r'\((.*?)\)')
-        keywords = ['тг', 'tg', '@', 'Whatsapp', 'вотсап','встреч']
+        keywords = ['тг', 'tg', '@', 'Whatsapp', 'вотсап', 'встреч', 'мне 17', "мне 16", "мне 15", "мне 14", 'откровен', 'шал', "подар"]
         for index, message in enumerate(messages, start=1):
             matches = pattern.findall(message.text)
             xpath = f"(//select[@name='reason'])[{index}]"
             select_locator = (By.XPATH, xpath)
-            if any(self.contains_keywords(match, keywords) for match in matches):
-                print(f"Итерация {index}: найдено 'тг' или 'tg' в тексте - {message.text}")
-                self.select_by_text(select_locator, "Спам")
-                anketa_xpath = f"(//input[@value='забанить'])[{index}]/ancestor::td//a"
-                anketa_locator = (By.XPATH, anketa_xpath)
-                print(self.element_is_present(anketa_locator).text)
-                ban_xpath = f"(//input[@value='забанить'])[{index}]"
-                ban_locator = (By.XPATH, ban_xpath)
+            for match in matches:  # Перебираем все совпадения
+                if self.contains_keywords(match, keywords):
+                    print(f"Итерация {index}: найдено {match} в тексте - {message.text}")
+                    self.select_by_text(select_locator, "Спам")
+
+                    anketa_xpath = f"(//input[@value='забанить'])[{index}]/ancestor::td//a"
+                    anketa_locator = (By.XPATH, anketa_xpath)
+                    print(self.element_is_present(anketa_locator).text)
+
+                    ban_xpath = f"(//input[@value='забанить'])[{index}]"
+                    ban_locator = (By.XPATH, ban_xpath)
                 #self.element_is_clickable(ban_locator).click()
 
 

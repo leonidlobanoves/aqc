@@ -13,11 +13,10 @@ class TestExtranjeria:
             extranjeria_page.fill_extranjeria_fields('Julia', 'Julia')
     #
         def test_script(self, driver):
-            script_page = Script(driver, 'https://staff.mamba.ru/support/message/client.php?select_mode=7&fid=222&client_id=16443977')
+            script_page = Script(driver, 'https://staff.mamba.ru/support/message/client.php?select_mode=7&fid=228&client_id=34644371')
             script_page.open()
-            #script_page.unban()
-            script_page.unban_auto()
-            #driver.close()
+            #script_page.unban_auto()
+            script_page.ban_machine()
 
 
         # def test_vichitki(self, driver):

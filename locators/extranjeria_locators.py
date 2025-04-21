@@ -36,6 +36,8 @@ class ExtranjeriaPageLocators:
     fast_unban = (By.XPATH, "//a[contains(text(),'разбанить')]")
     fid_number = (By.CSS_SELECTOR, "input[name='fid']")
     count_text_auto = "//option[@value='{key}']"
+    image = (By.XPATH, "//div[contains(@class,'item Approved')]")
+    ban_text = (By.CSS_SELECTOR, "div[class='col-md-4'] span")
 
 
 
