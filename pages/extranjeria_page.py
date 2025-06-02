@@ -109,6 +109,11 @@ class Script(BasePage):
         print(users_count_auto)
         female_reasons = ['Однотипные норм сообщения. Разъяснение. (Не спам !)', 'Сбой', "Интим и\или оскорбления в сообщениях, комментариях к стримам и т.п. Предупреждение."]
         while users_count_auto not in ["Не переносить сюда (Заблокированные антиспамом) (0)","Не переносить сюда (Неплатёжные заблокированные антиспам) (0)", "Не переносить сюда (Заблокированные) (0)"]:
+            field = self.element_is_visible(self.locators.text_field)
+            lang = False
+            lenguaje = self.element_is_present(self.locators.language).text
+            if "Problem with the service" in lenguaje:
+                lang = True
             element_unban = self.element_is_present(self.locators.fast_unban)
             if element_unban:
                 element_unban.click()
@@ -123,9 +128,16 @@ class Script(BasePage):
                 self.driver.switch_to.window(self.driver.window_handles[0])
             time.sleep(2)
             main_reason = random.choice([True, False])
-            if main_reason == True:
-                field = self.element_is_visible(self.locators.text_field)
+            if lang:
+                if main_reason:
+                    field.send_keys('''In some cases, sending messages containing the name of social networks, instant messengers, etc., as well as any contact information or a request to provide it can be identified as business or commercial offers, which are strictly prohibited in our dating system and lead to the permanent blocking of the profile.
+                    Try to stick to more neutral topics when communicating with new interlocutors. Your profile is available on the website.''')
+                else:
+                    field.send_keys("""In some cases, sending messages containing the name of social networks, instant messengers, etc., as well as any contact information or a request to provide it can be identified as business or commercial offers, which are strictly prohibited in our dating system and lead to the permanent blocking of the profile.
+                    Try to stick to more neutral topics when communicating with new interlocutors. Your profile is available on the website.""")
+            elif main_reason == True:
                 one_of_two = random.choice([True, False])
+                field = self.element_is_visible(self.locators.text_field)
                 if one_of_two:
                     field.send_keys('''В некоторых случаях отправка сообщений, содержащих: наименование социальных сетей, мессенджеров и т.п., а также любые контактные данные или просьбу их предоставить - может идентифицироваться как деловые или коммерческие предложения, что категорически запрещено в сервисе знакомств и ведёт к окончательной блокировке.
     Попробуйте придерживаться более нейтральных тем при общении с новыми собеседниками. Анкета разблокирована.''')
@@ -148,15 +160,54 @@ class Script(BasePage):
         users_count_auto = self.element_is_present((By.XPATH, users_count_auto_loc)).text
         print(users_count_auto)
         while users_count_auto != "Бан машина (0)":
+            if "DLS" in self.element_is_present(self.locators.ban_text).text:
+                dls_check = True
+                black_box = False
+            elif "черный ящик" in self.element_is_present(self.locators.ban_text).text:
+                black_box = True
+                dls_check = False
+            else:
+                dls_check = False
+                black_box = False
             self.element_is_clickable(self.locators.moderation).click()
             time.sleep(2)
             self.driver.switch_to.window(self.driver.window_handles[1])
-            if self.element_is_present(self.locators.image):
+            email = self.element_is_present(self.locators.email).get_attribute('value')
+
+            if dls_check:
+                self.element_is_visible(self.locators.unbanned).click()
+                self.element_is_visible(self.locators.unbanned).click()
+                time.sleep(0.5)
                 self.driver.close()
                 self.driver.switch_to.window(self.driver.window_handles[0])
                 field = self.element_is_visible(self.locators.text_field)
                 field.send_keys(
-                    '''Наша система заметила подозрительные действия в вашем аккаунте. Чтобы продолжить использование сервиса, подтвердите ваше фото.''')
+                    '''Обратите внимание: в сервисе знакомств в публичном пространстве категорически запрещена публикация тематики сексуального характера, грубости, личных оскорблений, нецензурных высказываний, контактных данных и предложений, не соответствующих специфике сайта. Последующая публикация подобного характера в блоке «Обо мне» или поступление оправданных жалоб приведёт к окончательной блокировке. Ваша анкета разблокирована.''')
+                time.sleep(0.5)
+                self.element_is_clickable(self.locators.accept).click()
+            # elif self.is_junk_email(email):
+            #     self.driver.close()
+            #     self.driver.switch_to.window(self.driver.window_handles[0])
+            #     field = self.element_is_visible(self.locators.text_field)
+            #     field.send_keys(
+            #         '''В связи с нарушением пользовательского соглашения разблокировка не предусмотрена. Создание новой анкеты на прежние регистрационные данные невозможно.''')
+            #     time.sleep(0.5)
+            #     self.element_is_clickable(self.locators.accept).click()
+            elif black_box:
+                self.driver.close()
+                self.driver.switch_to.window(self.driver.window_handles[0])
+                field = self.element_is_visible(self.locators.text_field)
+                field.send_keys(
+                    '''Регистрация на указанный адрес электронной почты невозможна. Пожалуйста, произведите регистрацию нового аккаунта на другой действительный адрес электронной почты.''')
+                time.sleep(0.5)
+                self.element_is_clickable(self.locators.accept).click()
+            elif self.element_is_present(self.locators.image):
+                self.driver.close()
+                self.driver.switch_to.window(self.driver.window_handles[0])
+                field = self.element_is_visible(self.locators.text_field)
+                field.send_keys(
+                    '''Подтвердите фотографию профиля и продолжайте общаться. Это поможет сделать знакомства более комфортными и безопасными.
+Чтобы пройти верификацию фото, нужно дать разрешение камере для приложения знакомств. Дать его можно в настройках вашего смартфона в разделе приложений или попробовать отправить в чат с поддержкой фото с камеры (не из Галереи), чтобы приложение само запросило разрешение на использование камеры. Также вы можете пройти верификацию на веб-версии сайта — там также следует дать разрешение камере для вашего браузера. Если разрешение дано, но во время верификации вы видите ошибку, то вам нужно попробовать переустановить приложение или воспользоваться другим браузером.''')
                 time.sleep(0.5)
                 self.element_is_clickable(self.locators.accept).click()
             else:
@@ -174,6 +225,30 @@ class Script(BasePage):
             if users_count_auto == "Бан машина (0)":
                 break
         print("the folder is empty")
+
+    def is_junk_email(self, email):
+        local = email.split("@")[0]
+
+        # слишком короткий (1-4 символа)
+        if len(local) < 5:
+            return True
+
+        # слишком длинная бессмысленная строка (20+ букв без цифр/слов)
+        if re.fullmatch(r'[a-z]{20,}', local):
+            return True
+
+        # нет ни одного числа, точки, подчёркивания — только буквы
+        if re.fullmatch(r'[a-zA-Z]+', local) and len(set(local)) < 4:
+            return True
+
+        # слишком много повторяющихся букв (например, aaaaabbbbb)
+        if max([local.count(ch) for ch in set(local)]) > len(local) * 0.7:
+            return True
+
+        if re.fullmatch(r'[a-zA-Z]{1,4}\d{1,}', local):
+            return True
+
+        return False
 
 
 class Vichitka(BasePage):

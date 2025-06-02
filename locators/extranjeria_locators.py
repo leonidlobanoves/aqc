@@ -37,7 +37,11 @@ class ExtranjeriaPageLocators:
     fid_number = (By.CSS_SELECTOR, "input[name='fid']")
     count_text_auto = "//option[@value='{key}']"
     image = (By.XPATH, "//div[contains(@class,'item Approved')]")
+    imageneg = (By.XPATH, "//div[contains(@class,'item Rejected ')]")
+    gender = (By.CSS_SELECTOR, "#optGender")
+    email = (By.CSS_SELECTOR, "#txtEmail")
     ban_text = (By.CSS_SELECTOR, "div[class='col-md-4'] span")
+    language = (By.CSS_SELECTOR, ".mto")
 
 
 
