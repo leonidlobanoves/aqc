@@ -109,43 +109,59 @@ class Script(BasePage):
         print(users_count_auto)
         female_reasons = ['Однотипные норм сообщения. Разъяснение. (Не спам !)', 'Сбой', "Интим и\или оскорбления в сообщениях, комментариях к стримам и т.п. Предупреждение."]
         while users_count_auto not in ["Не переносить сюда (Заблокированные антиспамом) (0)","Не переносить сюда (Неплатёжные заблокированные антиспам) (0)", "Не переносить сюда (Заблокированные) (0)"]:
-            field = self.element_is_visible(self.locators.text_field)
-            lang = False
-            lenguaje = self.element_is_present(self.locators.language).text
-            if "Problem with the service" in lenguaje:
-                lang = True
-            element_unban = self.element_is_present(self.locators.fast_unban)
-            if element_unban:
-                element_unban.click()
-            else:
+            el = self.element_is_present(self.locators.ban_text).text
+            if "DLS" in el:
                 self.element_is_clickable(self.locators.moderation).click()
                 time.sleep(2)
                 self.driver.switch_to.window(self.driver.window_handles[1])
                 self.element_is_visible(self.locators.unbanned).click()
                 self.element_is_visible(self.locators.unbanned).click()
-                time.sleep(2)
+                time.sleep(0.5)
                 self.driver.close()
                 self.driver.switch_to.window(self.driver.window_handles[0])
-            time.sleep(2)
-            main_reason = random.choice([True, False])
-            if lang:
-                if main_reason:
-                    field.send_keys('''In some cases, sending messages containing the name of social networks, instant messengers, etc., as well as any contact information or a request to provide it can be identified as business or commercial offers, which are strictly prohibited in our dating system and lead to the permanent blocking of the profile.
-                    Try to stick to more neutral topics when communicating with new interlocutors. Your profile is available on the website.''')
-                else:
-                    field.send_keys("""In some cases, sending messages containing the name of social networks, instant messengers, etc., as well as any contact information or a request to provide it can be identified as business or commercial offers, which are strictly prohibited in our dating system and lead to the permanent blocking of the profile.
-                    Try to stick to more neutral topics when communicating with new interlocutors. Your profile is available on the website.""")
-            elif main_reason == True:
-                one_of_two = random.choice([True, False])
                 field = self.element_is_visible(self.locators.text_field)
-                if one_of_two:
-                    field.send_keys('''В некоторых случаях отправка сообщений, содержащих: наименование социальных сетей, мессенджеров и т.п., а также любые контактные данные или просьбу их предоставить - может идентифицироваться как деловые или коммерческие предложения, что категорически запрещено в сервисе знакомств и ведёт к окончательной блокировке.
-    Попробуйте придерживаться более нейтральных тем при общении с новыми собеседниками. Анкета разблокирована.''')
-                else:
-                    field.send_keys('''Во избежание повторных блокировок, вам следует разнообразить переписку на сайте. Старайтесь не отправлять одинаковых сообщений - данные действия могут расцениваться как рассылка спама. Анкета доступна в системе знакомств.''')
+                field.send_keys(
+                    '''Обратите внимание: в сервисе знакомств в публичном пространстве категорически запрещена публикация тематики сексуального характера, грубости, личных оскорблений, нецензурных высказываний, контактных данных и предложений, не соответствующих специфике сайта. Последующая публикация подобного характера в блоке «Обо мне» или поступление оправданных жалоб приведёт к окончательной блокировке. Ваша анкета разблокирована.''')
+                time.sleep(0.5)
+                self.element_is_clickable(self.locators.accept).click()
             else:
-                reason = random.choice(female_reasons)
-                self.select_by_text(self.locators.reason, reason)
+                lang = False
+                lenguaje = self.element_is_present(self.locators.language).text
+                main_reason = random.choice([True, False])
+                if "Problem " in lenguaje:
+                    lang = True
+                element_unban = self.element_is_present(self.locators.fast_unban)
+                if element_unban:
+                    element_unban.click()
+                else:
+                    self.element_is_clickable(self.locators.moderation).click()
+                    time.sleep(2)
+                    self.driver.switch_to.window(self.driver.window_handles[1])
+                    self.element_is_visible(self.locators.unbanned).click()
+                    self.element_is_visible(self.locators.unbanned).click()
+                    time.sleep(2)
+                    self.driver.close()
+                    self.driver.switch_to.window(self.driver.window_handles[0])
+                time.sleep(2)
+                field = self.element_is_visible(self.locators.text_field)
+                if lang:
+                    if main_reason:
+                        field.send_keys('''In some cases, sending messages containing the name of social networks, instant messengers, etc., as well as any contact information or a request to provide it can be identified as business or commercial offers, which are strictly prohibited in our dating system and lead to the permanent blocking of the profile.
+                        Try to stick to more neutral topics when communicating with new interlocutors. Your profile is available on the website.''')
+                    else:
+                        field.send_keys("""In some cases, sending messages containing the name of social networks, instant messengers, etc., as well as any contact information or a request to provide it can be identified as business or commercial offers, which are strictly prohibited in our dating system and lead to the permanent blocking of the profile.
+                        Try to stick to more neutral topics when communicating with new interlocutors. Your profile is available on the website.""")
+                elif main_reason == True:
+                    one_of_two = random.choice([True, False])
+                    field = self.element_is_visible(self.locators.text_field)
+                    if one_of_two:
+                        field.send_keys('''В некоторых случаях отправка сообщений, содержащих: наименование социальных сетей, мессенджеров и т.п., а также любые контактные данные или просьбу их предоставить - может идентифицироваться как деловые или коммерческие предложения, что категорически запрещено в сервисе знакомств и ведёт к окончательной блокировке.
+        Попробуйте придерживаться более нейтральных тем при общении с новыми собеседниками. Анкета разблокирована.''')
+                    else:
+                        field.send_keys('''Во избежание повторных блокировок, вам следует разнообразить переписку на сайте. Старайтесь не отправлять одинаковых сообщений - данные действия могут расцениваться как рассылка спама. Анкета доступна в системе знакомств.''')
+                else:
+                    reason = random.choice(female_reasons)
+                    self.select_by_text(self.locators.reason, reason)
             time.sleep(1)
             self.element_is_clickable(self.locators.accept).click()
             time.sleep(1)
