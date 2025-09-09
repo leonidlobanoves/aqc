@@ -110,6 +110,9 @@ class Script(BasePage):
         female_reasons = ['Однотипные норм сообщения. Разъяснение. (Не спам !)', 'Сбой', "Интим и\или оскорбления в сообщениях, комментариях к стримам и т.п. Предупреждение."]
         while users_count_auto not in ["Не переносить сюда (Заблокированные антиспамом) (0)","Не переносить сюда (Неплатёжные заблокированные антиспам) (0)", "Не переносить сюда (Заблокированные) (0)"]:
             el = self.element_is_present(self.locators.ban_text).text
+            if el == '':
+                el = self.element_is_present(self.locators.ban_text2).text
+
             if "DLS" in el:
                 self.element_is_clickable(self.locators.moderation).click()
                 time.sleep(2)
@@ -171,6 +174,7 @@ class Script(BasePage):
         print("the folder is empty")
 
     def ban_machine(self):
+        #self.element_is_clickable(self.locators.messages).click()
         fid_value = self.element_is_present(self.locators.fid_number).get_attribute("value")
         users_count_auto_loc = self.locators.count_text_auto.format(key=fid_value)
         users_count_auto = self.element_is_present((By.XPATH, users_count_auto_loc)).text
@@ -217,7 +221,7 @@ class Script(BasePage):
                     '''Регистрация на указанный адрес электронной почты невозможна. Пожалуйста, произведите регистрацию нового аккаунта на другой действительный адрес электронной почты.''')
                 time.sleep(0.5)
                 self.element_is_clickable(self.locators.accept).click()
-            elif self.element_is_present(self.locators.image):
+            elif self.element_is_present(self.locators.image, timeout=1) or self.element_is_present(self.locators.imageneg, timeout=1):
                 self.driver.close()
                 self.driver.switch_to.window(self.driver.window_handles[0])
                 field = self.element_is_visible(self.locators.text_field)

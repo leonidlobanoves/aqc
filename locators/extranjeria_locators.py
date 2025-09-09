@@ -41,6 +41,8 @@ class ExtranjeriaPageLocators:
     gender = (By.CSS_SELECTOR, "#optGender")
     email = (By.CSS_SELECTOR, "#txtEmail")
     ban_text = (By.CSS_SELECTOR, "div[class='col-md-4'] span")
+    ban_text2 = (By.XPATH, "(//div[@class='col-md-4']//span)[2]")
+    messages = (By.XPATH, "//a[contains(text(),'Сообщения')]")
     language = (By.CSS_SELECTOR, ".mto")
 
 
