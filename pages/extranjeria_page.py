@@ -175,15 +175,21 @@ class Script(BasePage):
 
     def ban_machine(self):
         #self.element_is_clickable(self.locators.messages).click()
+        frame = self.element_is_present(self.locators.frame_loc)
+        self.driver.switch_to.frame(frame)
+        self.element_is_clickable(self.locators.messagesprin).click()
         fid_value = self.element_is_present(self.locators.fid_number).get_attribute("value")
         users_count_auto_loc = self.locators.count_text_auto.format(key=fid_value)
         users_count_auto = self.element_is_present((By.XPATH, users_count_auto_loc)).text
         print(users_count_auto)
+        self.driver.switch_to.window(self.driver.window_handles[0])
+        self.driver.close()
+        self.driver.switch_to.window(self.driver.window_handles[0])
         while users_count_auto != "Бан машина (0)":
             if "DLS" in self.element_is_present(self.locators.ban_text).text:
                 dls_check = True
                 black_box = False
-            elif "черный ящик" in self.element_is_present(self.locators.ban_text).text:
+            elif "черный ящик" in self.element_is_present(self.locators.ban_text).text or "BlackBox" in self.element_is_present(self.locators.ban_text).text:
                 black_box = True
                 dls_check = False
             else:
@@ -192,7 +198,6 @@ class Script(BasePage):
             self.element_is_clickable(self.locators.moderation).click()
             time.sleep(2)
             self.driver.switch_to.window(self.driver.window_handles[1])
-            email = self.element_is_present(self.locators.email).get_attribute('value')
 
             if dls_check:
                 self.element_is_visible(self.locators.unbanned).click()
@@ -221,7 +226,7 @@ class Script(BasePage):
                     '''Регистрация на указанный адрес электронной почты невозможна. Пожалуйста, произведите регистрацию нового аккаунта на другой действительный адрес электронной почты.''')
                 time.sleep(0.5)
                 self.element_is_clickable(self.locators.accept).click()
-            elif self.element_is_present(self.locators.image, timeout=1) or self.element_is_present(self.locators.imageneg, timeout=1):
+            elif self.element_is_present(self.locators.image, timeout=1.5) or self.element_is_present(self.locators.imageneg, timeout=1.5):
                 self.driver.close()
                 self.driver.switch_to.window(self.driver.window_handles[0])
                 field = self.element_is_visible(self.locators.text_field)

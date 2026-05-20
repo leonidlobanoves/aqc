@@ -13,7 +13,8 @@ class TestExtranjeria:
             extranjeria_page.fill_extranjeria_fields('Julia', 'Julia')
     #
         def test_script(self, driver):
-            script_page = Script(driver, 'hhttps://staff.mamba.ru/support/message/client.php?client_id=35704544&fid=228&select_mode=7')
+            script_page = Script(driver, 'https://staff.mamba.ru/proxy?file=%2Fsupport%2Fmsg.php%3Ffid%3D228%26select_mode%3D7%26from_date%3D%26to_date%3D%26ip_filter%3D')
+            #script_page = Script(driver, 'https://staff.mamba.ru/support/message/client.php?client_id=17115356&fid=228&select_mode=7')
             script_page.open()
             #script_page.unban_auto()
             script_page.ban_machine()

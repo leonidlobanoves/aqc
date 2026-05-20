@@ -44,6 +44,7 @@ class ExtranjeriaPageLocators:
     ban_text2 = (By.XPATH, "(//div[@class='col-md-4']//span)[2]")
     messages = (By.XPATH, "//a[contains(text(),'Сообщения')]")
     language = (By.CSS_SELECTOR, ".mto")
+    messagesprin = (By.LINK_TEXT, "Сообщения")
 
 
 
