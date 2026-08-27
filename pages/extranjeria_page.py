@@ -186,39 +186,36 @@ class Script(BasePage):
         self.driver.close()
         self.driver.switch_to.window(self.driver.window_handles[0])
         while users_count_auto != "Бан машина (0)":
-            if "DLS" in self.element_is_present(self.locators.ban_text).text:
-                dls_check = True
-                black_box = False
-            elif "черный ящик" in self.element_is_present(self.locators.ban_text).text or "BlackBox" in self.element_is_present(self.locators.ban_text).text:
+            # if "DLS" in self.element_is_present(self.locators.ban_text).text:
+            #     dls_check = True
+            #     black_box = False
+            if "черный ящик" in self.element_is_present(self.locators.ban_text).text or "BlackBox" in self.element_is_present(self.locators.ban_text).text:
                 black_box = True
-                dls_check = False
+                sgen_check = False
+            elif 'e-mail' in self.element_is_present(self.locators.ban_text).text or "email" in self.element_is_present(self.locators.ban_text).text:
+                black_box = False
+                sgen_check = True
             else:
-                dls_check = False
+                sgen_check = False
                 black_box = False
             self.element_is_clickable(self.locators.moderation).click()
             time.sleep(2)
             self.driver.switch_to.window(self.driver.window_handles[1])
+            email = self.element_is_visible(self.locators.email).get_attribute('value')
 
-            if dls_check:
-                self.element_is_visible(self.locators.unbanned).click()
-                self.element_is_visible(self.locators.unbanned).click()
-                time.sleep(0.5)
-                self.driver.close()
-                self.driver.switch_to.window(self.driver.window_handles[0])
-                field = self.element_is_visible(self.locators.text_field)
-                field.send_keys(
-                    '''Обратите внимание: в сервисе знакомств в публичном пространстве категорически запрещена публикация тематики сексуального характера, грубости, личных оскорблений, нецензурных высказываний, контактных данных и предложений, не соответствующих специфике сайта. Последующая публикация подобного характера в блоке «Обо мне» или поступление оправданных жалоб приведёт к окончательной блокировке. Ваша анкета разблокирована.''')
-                time.sleep(0.5)
-                self.element_is_clickable(self.locators.accept).click()
-            # elif self.is_junk_email(email):
+
+            # if dls_check:
+            #     self.element_is_visible(self.locators.unbanned).click()
+            #     self.element_is_visible(self.locators.unbanned).click()
+            #     time.sleep(0.5)
             #     self.driver.close()
             #     self.driver.switch_to.window(self.driver.window_handles[0])
             #     field = self.element_is_visible(self.locators.text_field)
             #     field.send_keys(
-            #         '''В связи с нарушением пользовательского соглашения разблокировка не предусмотрена. Создание новой анкеты на прежние регистрационные данные невозможно.''')
+            #         '''Обратите внимание: в сервисе знакомств в публичном пространстве категорически запрещена публикация тематики сексуального характера, грубости, личных оскорблений, нецензурных высказываний, контактных данных и предложений, не соответствующих специфике сайта. Последующая публикация подобного характера в блоке «Обо мне» или поступление оправданных жалоб приведёт к окончательной блокировке. Ваша анкета разблокирована.''')
             #     time.sleep(0.5)
             #     self.element_is_clickable(self.locators.accept).click()
-            elif black_box:
+            if black_box:
                 self.driver.close()
                 self.driver.switch_to.window(self.driver.window_handles[0])
                 field = self.element_is_visible(self.locators.text_field)
@@ -226,15 +223,39 @@ class Script(BasePage):
                     '''Регистрация на указанный адрес электронной почты невозможна. Пожалуйста, произведите регистрацию нового аккаунта на другой действительный адрес электронной почты.''')
                 time.sleep(0.5)
                 self.element_is_clickable(self.locators.accept).click()
-            elif self.element_is_present(self.locators.image, timeout=1.5) or self.element_is_present(self.locators.imageneg, timeout=1.5):
-                self.driver.close()
-                self.driver.switch_to.window(self.driver.window_handles[0])
-                field = self.element_is_visible(self.locators.text_field)
-                field.send_keys(
-                    '''Подтвердите фотографию профиля и продолжайте общаться. Это поможет сделать знакомства более комфортными и безопасными.
-Чтобы пройти верификацию фото, нужно дать разрешение камере для приложения знакомств. Дать его можно в настройках вашего смартфона в разделе приложений или попробовать отправить в чат с поддержкой фото с камеры (не из Галереи), чтобы приложение само запросило разрешение на использование камеры. Также вы можете пройти верификацию на веб-версии сайта — там также следует дать разрешение камере для вашего браузера. Если разрешение дано, но во время верификации вы видите ошибку, то вам нужно попробовать переустановить приложение или воспользоваться другим браузером.''')
-                time.sleep(0.5)
-                self.element_is_clickable(self.locators.accept).click()
+            elif sgen_check:
+                if self.is_junk_email(email):
+                    self.driver.close()
+                    self.driver.switch_to.window(self.driver.window_handles[0])
+                    field = self.element_is_visible(self.locators.text_field)
+                    field.send_keys(
+                        '''Регистрация на указанный адрес электронной почты невозможна. Пожалуйста, произведите регистрацию нового аккаунта на другой действительный адрес электронной почты.''')
+                    time.sleep(0.5)
+                    self.element_is_clickable(self.locators.accept).click()
+                else:
+                    self.element_is_visible(self.locators.unbanned).click()
+                    self.element_is_visible(self.locators.unbanned).click()
+                    time.sleep(0.5)
+                    self.driver.close()
+                    self.driver.switch_to.window(self.driver.window_handles[0])
+                    field = self.element_is_visible(self.locators.text_field)
+                    field.send_keys('''Ваш аккаунт уже разблокирован. Чтобы снизить риск повторной блокировки в будущем, рекомендуем проверить, подтверждены ли у вас электронная почта и фото:
+1. В случае, если адрес электронной почты у вас не подтвержден, то сделать это вы можете в настройках вашего аккаунта в разделе Подтверждение анкеты.
+2. Если у вас уже есть фото и оно не верифицировано, то верифицируйте его в настройках вашего аккаунта.
+3. Если фото у вас нет, то загрузите портретное фото и пройдите верификацию, так же в настройках вашего аккаунта.''')
+                    time.sleep(0.5)
+                    self.element_is_clickable(self.locators.accept).click()
+#             elif self.element_is_present(self.locators.image, timeout=1.5) or self.element_is_present(self.locators.imageneg, timeout=1.5):
+#                 self.driver.close()
+#                 self.driver.switch_to.window(self.driver.window_handles[0])
+#                 field = self.element_is_visible(self.locators.text_field)
+#                 field.send_keys(
+#                     '''Подтвердите фотографию профиля и продолжайте общаться. Это поможет сделать знакомства более комфортными и безопасными.
+# Чтобы пройти верификацию фото, нужно дать разрешение камере для приложения знакомств или сайта в браузере при использовании веб-версии.
+# При верификации используйте хорошее освещение, контрастный фон, голову нужно поместить в контур овала.
+# При появлении ошибки попробуйте сменить подключение к интернету с wi-fi на мобильный, или наоборот. Если ошибка не пропадает — пришлите пошагово скриншоты, как вы проходите верификацию и скриншот с разрешением для камеры.''')
+#                 time.sleep(0.5)
+#                 self.element_is_clickable(self.locators.accept).click()
             else:
                 self.element_is_visible(self.locators.unbanned).click()
                 self.element_is_visible(self.locators.unbanned).click()
@@ -242,7 +263,10 @@ class Script(BasePage):
                 self.driver.close()
                 self.driver.switch_to.window(self.driver.window_handles[0])
                 field = self.element_is_visible(self.locators.text_field)
-                field.send_keys('''Наша система заметила подозрительные действия в вашем аккаунте. Сейчас ваш аккаунт разблокирован. Для того, чтобы избежать блокировки в дальнейшем, разместите портретное фото и верифицируйте его в настройках вашего аккаунта.''')
+                field.send_keys('''Ваш аккаунт уже разблокирован. Чтобы снизить риск повторной блокировки в будущем, рекомендуем проверить, подтверждены ли у вас электронная почта и фото:
+1. В случае, если адрес электронной почты у вас не подтвержден, то сделать это вы можете в настройках вашего аккаунта в разделе Подтверждение анкеты.
+2. Если у вас уже есть фото и оно не верифицировано, то верифицируйте его в настройках вашего аккаунта.
+3. Если фото у вас нет, то загрузите портретное фото и пройдите верификацию, так же в настройках вашего аккаунта.''')
                 time.sleep(0.5)
                 self.element_is_clickable(self.locators.accept).click()
             time.sleep(0.5)
@@ -250,6 +274,91 @@ class Script(BasePage):
             if users_count_auto == "Бан машина (0)":
                 break
         print("the folder is empty")
+
+    def doble_anket(self):
+        # self.element_is_clickable(self.locators.messages).click()
+        frame = self.element_is_present(self.locators.frame_loc)
+        self.driver.switch_to.frame(frame)
+        self.element_is_clickable(self.locators.messagesprin).click()
+        fid_value = self.element_is_present(self.locators.fid_number).get_attribute("value")
+        users_count_auto_loc = self.locators.count_text_auto.format(key=fid_value)
+        users_count_auto = self.element_is_present((By.XPATH, users_count_auto_loc)).text
+        print(users_count_auto)
+        self.driver.switch_to.window(self.driver.window_handles[0])
+        self.driver.close()
+        self.driver.switch_to.window(self.driver.window_handles[0])
+        while users_count_auto != "Бан дублей анкет (0)":
+            self.driver.switch_to.window(self.driver.window_handles[0])
+            self.element_is_clickable(self.locators.moderation).click()
+            time.sleep(2)
+            self.driver.switch_to.window(self.driver.window_handles[1])
+            yana = False
+            try:
+                if self.element_is_present(self.locators.femalename).text == 'Яна, 35':
+                    yana = True
+            except Exception:
+                pass
+            if yana:
+                self.driver.close()
+                self.driver.switch_to.window(self.driver.window_handles[0])
+                field = self.element_is_visible(self.locators.text_field)
+                field.send_keys(
+                    '''Ваш профиль заблокирован в связи с нарушением Лицензионного Соглашения. Разблокировка не предусмотрена.''')
+                time.sleep(0.5)
+                self.element_is_clickable(self.locators.accept).click()
+            else:
+                email = self.element_is_visible(self.locators.email).get_attribute('value')
+                self.element_is_clickable(self.locators.double_href).click()
+                time.sleep(1)
+                self.driver.switch_to.window(self.driver.window_handles[2])
+                double_counter = self.element_is_visible(self.locators.double_counter).text
+                name_elements = self.elements_are_present(self.locators.double_names)
+                names = {el.text.strip() for el in name_elements if el.text.strip()}
+                if int(double_counter) <= 5 or len(names) > 3:
+                    self.driver.close()
+                    self.driver.switch_to.window(self.driver.window_handles[1])
+                    if self.is_junk_email(email):
+                        self.driver.close()
+                        self.driver.switch_to.window(self.driver.window_handles[0])
+                        field = self.element_is_visible(self.locators.text_field)
+                        field.send_keys(
+                            '''Ваш профиль заблокирован в связи с нарушением Лицензионного Соглашения. Разблокировка не предусмотрена.''')
+                        time.sleep(0.5)
+                        self.element_is_clickable(self.locators.accept).click()
+                    else:
+                        self.element_is_visible(self.locators.unbanned).click()
+                        self.element_is_visible(self.locators.unbanned).click()
+                        time.sleep(0.5)
+                        self.driver.close()
+                        self.driver.switch_to.window(self.driver.window_handles[0])
+                        field = self.element_is_visible(self.locators.text_field)
+                        text = (
+                            "Ваш аккаунт уже разблокирован. Чтобы снизить риск повторной блокировки в будущем, "
+                            "рекомендуем проверить, подтверждены ли у вас электронная почта и фото:\n"
+                            "1. В случае, если адрес электронной почты у вас не подтвержден, то сделать это вы можете в настройках вашего аккаунта в разделе Подтверждение анкеты.\n"
+                            "2. Если у вас уже есть фото и оно не верифицировано, то верифицируйте его в настройках вашего аккаунта.\n"
+                            "3. Если фото у вас нет, то загрузите портретное фото и пройдите верификацию, так же в настройках вашего аккаунта."
+                        )
+                        field.send_keys(text)
+                        time.sleep(0.5)
+                        self.element_is_clickable(self.locators.accept).click()
+                else:
+                    self.driver.close()
+                    self.driver.switch_to.window(self.driver.window_handles[1])
+                    self.driver.close()
+                    self.driver.switch_to.window(self.driver.window_handles[0])
+                    field = self.element_is_visible(self.locators.text_field)
+                    field.send_keys('''Ваш профиль заблокирован в связи с нарушением Лицензионного Соглашения. Разблокировка не предусмотрена.''')
+                    time.sleep(0.5)
+                    self.element_is_clickable(self.locators.accept).click()
+            time.sleep(0.5)
+            users_count_auto = self.element_is_present((By.XPATH, users_count_auto_loc)).text
+            if users_count_auto == "Бан дублей анкет (0)":
+                break
+
+        print("the folder is empty")
+
+    import re
 
     def is_junk_email(self, email):
         local = email.split("@")[0]
@@ -262,7 +371,7 @@ class Script(BasePage):
         if re.fullmatch(r'[a-z]{20,}', local):
             return True
 
-        # нет ни одного числа, точки, подчёркивания — только буквы
+        # нет ни одного числа, точки, подчёркивания — только буквы с низким разнообразием
         if re.fullmatch(r'[a-zA-Z]+', local) and len(set(local)) < 4:
             return True
 
@@ -270,7 +379,12 @@ class Script(BasePage):
         if max([local.count(ch) for ch in set(local)]) > len(local) * 0.7:
             return True
 
+        # короткие буквы + цифры (например, ab12345)
         if re.fullmatch(r'[a-zA-Z]{1,4}\d{1,}', local):
+            return True
+
+        # Имя (любое количество букв) + ровно 4 цифры (например, emily4287)
+        if re.fullmatch(r'[a-zA-Z]+\d{4}', local):
             return True
 
         return False

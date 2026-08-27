@@ -7,10 +7,10 @@ from pages.extranjeria_page import ExtranjeriaPage, Script, Vichitka, Chrometest
 class TestExtranjeria:
     class TestExtranjeriaFields:
 
-        def test_extranjeria(self, driver):
-            extranjeria_page = ExtranjeriaPage(driver, 'https://icp.administracionelectronica.gob.es/icpplus/index.html')
-            extranjeria_page.open()
-            extranjeria_page.fill_extranjeria_fields('Julia', 'Julia')
+        # def test_extranjeria(self, driver):
+        #     extranjeria_page = ExtranjeriaPage(driver, 'https://icp.administracionelectronica.gob.es/icpplus/index.html')
+        #     extranjeria_page.open()
+        #     extranjeria_page.fill_extranjeria_fields('Julia', 'Julia')
     #
         def test_script(self, driver):
             script_page = Script(driver, 'https://staff.mamba.ru/proxy?file=%2Fsupport%2Fmsg.php%3Ffid%3D228%26select_mode%3D7%26from_date%3D%26to_date%3D%26ip_filter%3D')
@@ -18,6 +18,11 @@ class TestExtranjeria:
             script_page.open()
             #script_page.unban_auto()
             script_page.ban_machine()
+
+        def test_double(self, driver):
+            double_page = Script(driver, "https://staff.mamba.ru/proxy?file=%2Fsupport%2Fmsg.php%3Ffrom_date%3D%26to_date%3D%26select_mode%3D7%26fid%3D239%26OK%3D%25D0%259F%25D0%25B5%25D1%2580%25D0%25B5%25D0%25B9%25D1%2582%25D0%25B8")
+            double_page.open()
+            double_page.doble_anket()
 
 
         # def test_vichitki(self, driver):

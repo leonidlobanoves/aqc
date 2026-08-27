@@ -45,12 +45,18 @@ class ExtranjeriaPageLocators:
     messages = (By.XPATH, "//a[contains(text(),'Сообщения')]")
     language = (By.CSS_SELECTOR, ".mto")
     messagesprin = (By.LINK_TEXT, "Сообщения")
+    femalename = (By.CSS_SELECTOR, 'b.name_F')
+    malename = (By.CSS_SELECTOR, 'b.name_M')
 
 
 
 
     all_messages = (By.XPATH, "//ul[@class='list-unstyled']")
     frame_loc = (By.XPATH, "//iframe[@id='frame']")
+
+    double_href = (By.XPATH, "//a[contains(text(),'Анкета-дубль')]")
+    double_counter = (By.CSS_SELECTOR, "p[class='muted'] strong")
+    double_names = (By.CSS_SELECTOR, "table > tbody > tr > td:nth-child(3)")
 
 
 class ShadowDOMLocators:
